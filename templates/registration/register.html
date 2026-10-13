@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация — Система доставки{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 480px; margin: 40px auto;">
+    <h1 style="text-align: center; margin-bottom: 25px;">Регистрация</h1>
+
+    {% if form.non_field_errors %}
+        <div class="message message-error" style="margin-bottom: 15px;">
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label for="{{ form.username.id_for_label }}">Имя пользователя</label>
+            {{ form.username }}
+            {% if form.username.help_text %}
+                <span class="helptext">{{ form.username.help_text }}</span>
+            {% endif %}
+            {% if form.username.errors %}
+                <ul class="errorlist">
+                    {% for error in form.username.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.full_name.id_for_label }}">ФИО</label>
+            {{ form.full_name }}
+            {% if form.full_name.errors %}
+                <ul class="errorlist">
+                    {% for error in form.full_name.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <ul class="errorlist">
+                    {% for error in form.email.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.phone.id_for_label }}">Телефон</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}
+                <ul class="errorlist">
+                    {% for error in form.phone.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.password1.id_for_label }}">Пароль</label>
+            {{ form.password1 }}
+            {% if form.password1.help_text %}
+                <span class="helptext">{{ form.password1.help_text|safe }}</span>
+            {% endif %}
+            {% if form.password1.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password1.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+
+        <p>
+            <label for="{{ form.password2.id_for_label }}">Подтверждение пароля</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password2.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </p>
+
+        <button type="submit" class="btn btn-success" style="width: 100%; padding: 11px; margin-top: 8px;">
+            Создать аккаунт
+        </button>
+    </form>
+
+    <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #86868b;">
+        Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+    </p>
+</div>
+{% endblock %}

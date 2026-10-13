@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Заказ #{{ order.id }} — Система доставки{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div>
+        <a href="{% url 'tracking:orders-list' %}" class="back-link" style="margin: 0 0 8px 0;">← К списку заказов</a>
+        <h1 style="margin: 0;">
+            Заказ #{{ order.id }}
+            <span class="status status-{{ order.status }}" style="margin-left: 10px; vertical-align: middle;">
+                {{ order.get_status_display }}
+            </span>
+        </h1>
+    </div>
+    <div style="text-align: right; color: #86868b; font-size: 13px;">
+        Создан: {{ order.created_at|date:"d.m.Y H:i" }}<br>
+        Обновлён: {{ order.updated_at|date:"d.m.Y H:i" }}
+    </div>
+</div>
+
+<!-- Основная информация -->
+<div class="card">
+    <h2>Информация о заказе</h2>
+    <table class="info-table">
+        <tr>
+            <td>Клиент</td>
+            <td><strong>{{ order.client.username }}</strong>
+                {% if order.client.full_name %}· {{ order.client.full_name }}{% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Курьер</td>
+            <td>
+                {% if order.courier %}
+                    <strong>{{ order.courier.username }}</strong>
+                    {% if order.courier.full_name %}· {{ order.courier.full_name }}{% endif %}
+                {% else %}
+                    <em style="color: #86868b;">не назначен</em>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Откуда</td>
+            <td>{{ order.route.origin_address }}</td>
+        </tr>
+        <tr>
+            <td>Куда</td>
+            <td>{{ order.route.delivery_address }}</td>
+        </tr>
+        <tr>
+            <td>Описание</td>
+            <td>{{ order.description|default:"—" }}</td>
+        </tr>
+        <tr>
+            <td>Сумма</td>
+            <td><strong style="font-size: 16px;">{{ order.total_amount }} ₽</strong></td>
+        </tr>
+    </table>
+</div>
+
+<!-- Смена статуса — только курьер и модератор -->
+{% if user.role == "courier" or user.role == "moderator" %}
+    <div class="card">
+        <h2>Сменить статус</h2>
+        <form method="post" action="/orders/{{ order.id }}/status/">
+            {% csrf_token %}
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <select name="status" style="flex: 1; max-width: 300px;">
+                    {% for value, label in order.Status.choices %}
+                        <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn">Применить</button>
+            </div>
+            <span class="helptext" style="margin-top: 8px; display: block;">
+                Выберите новый статус и нажмите «Применить». Изменение сохранится сразу.
+            </span>
+        </form>
+    </div>
+{% endif %}
+
+<!-- Информация о ролях (для отладки, можно удалить) -->
+{% if user.role == "client" and order.client != user %}
+    <div class="message message-warning" style="margin-top: 20px;">
+        Это не ваш заказ. Вы видите его, потому что у вас роль клиента, но заказ принадлежит другому пользователю.
+    </div>
+{% endif %}
+{% endblock %}

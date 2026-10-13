@@ -3,6 +3,7 @@ users = {
     "user2": "qwerty456"
 }
 
+
 def render_menu():
     print("Добро пожаловать в систему")
     action = None
@@ -30,14 +31,14 @@ def render_menu():
                     found = True
                     break
 
-            if found == False:
+            if found is False:
                 print("Некорректный пользователь")
             else:
                 password = None
-                while(password != "0"):
+                while (password != "0"):
                 
                     password = input("Введите пароль(нажмите 0 для выхода): ")
-                    if check_password(userName, password) == False:
+                    if check_password(userName, password) is False:
                         print("Некорректный пароль")
                     else: 
                         print("Пароль верен")
@@ -48,6 +49,7 @@ def render_menu():
 def check_password(username: str, password_entered: str) -> bool:
     return users[username] == password_entered
 
+
 def render_logged_menu():
     print("=====Выберите действие=====")
     print("1. Список пользователей")
@@ -56,5 +58,6 @@ def render_logged_menu():
     if action == "1":
         for i in users:
             print(i, ": ", users[i])
-        
+
+
 render_menu()

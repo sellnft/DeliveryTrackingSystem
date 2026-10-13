@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from repository.userRepository import UserRepository
 from services.userService import UserService
-from models.user import UserRole, User
-from models.order import Order
+from models.user import UserRole
+
 
 pytestmark = pytest.mark.asyncio
 
